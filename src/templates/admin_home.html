@@ -1,0 +1,147 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | admin interface
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('update.css')}}">
+{% endblock %}
+
+{% block body %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{{url_for('admin_home')}}">
+        <i class="fa fa-home" aria-hidden="true"></i>
+        Home
+      </a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('all_users')}}">users</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('videos_uploaded')}}">videos</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('upload_video')}}">upload</a>
+          </li>
+          <li class="nav-item dropdown ml-lg-5">
+            <a href="#" class="nav-link dropdown-toggle" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" >
+               <img alt="" class="img-fluid rounded-circle" src="{{url_for('view_profile')}}"/>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                <li class="dropdown-item">
+                   <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
+                </li>
+                <div class="dropdown-divider"></div>
+                <li class="dropdown-item">
+                  <a class="dropdown-item" href="{{url_for('admin_profile')}}">Profile</a>
+                </li>
+                <li class="dropdown-item">
+                   <a class="dropdown-item" href="{{url_for('signout')}}">Signout</a>
+                </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container main_div my-5 p-5">
+    <div class="home_info">
+        <div class="new_videos my-4">
+            <div class="header text-center">
+                <h3 class="font-weight-normal">Top 5 Recent added videos</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-success table-hover text-center">
+                    <thead>
+                        <tr>
+                            <th scope="col">Video id</th>
+                            <th scope="col">Video name</th>
+                            <th scope="col">Video genre</th>
+                            <th scope="col">Video year</th>
+                            <th scope="col">Video language</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Video time saved</th>
+                            <th scope="col">Video photo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {% for video in videos %}
+                        <tr>
+                            <th scope="row">{{video.video_id}}</th>
+                            <td>{{video.video_name}}</td>
+                            <td>{{video.video_genre}}</td>
+                            <td>{{video.video_year}}</td>
+                            <td>{{video.video_language}}</td>
+                            {% if video.active %}
+                                <td>Active</td>
+                            {% else %}
+                                <td>Inactive</td>
+                            {% endif %}
+                            <td>{{video.video_time_saved}}</td>
+                            <td><img class="rounded-circle" src="{{url_for('view_file', name=video.video_photo)}}" width="50px" height="50px"></td>
+                      </tr>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="new_users my-4">
+            <div class="header text-center">
+                <h3 class="font-weight-normal">Top 5 Recent created accounts</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-success table-hover text-center">
+                    <thead>
+                      <tr>
+                        <th scope="col">User Id</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Middle Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Time Created</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Profile</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for user in users %}
+                        <tr>
+                            <th scope="row">{{user.user_id}}</th>
+                            <td>{{user.first_name}}</td>
+                            <td>{{user.last_name}}</td>
+                            <td>{{user.middle_name}}</td>
+                            <td>{{user.email}}</td>
+                            <td>{{user.creation_time}}</td>
+                            {% if user.active %}
+                              <td>Active</td>
+                            {% else %}
+                              <td>Inactive</td>
+                            {% endif %}
+                            <td><img class="rounded-circle" src="{{url_for('view_profile')}}" width="50px" height="50px"></td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="home_footer mt-5">
+          <div class="d-flex justify-content-around">
+            <a href="{{url_for('new_staff_admin')}}" type="button" class="btn btn-warning">Add new staff admin</a>
+            <a href="{{url_for('all_staff_admins')}}" type="button" class="btn btn-info">View staff admins</a>
+          </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

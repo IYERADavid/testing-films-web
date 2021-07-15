@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | admin interface
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('update.css')}}">
+{% endblock %}
+
+{% block body %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-upload"></i>
+        Login
+      </a>
+    </div>
+</nav>
+
+
+<div class="container main_div my-5 p-5">
+    <div class="login-form">
+        <div class="row d-flex justify-content-center">
+          <div class="col-md-8 text-center bg-info">
+            <form id="form" action="" novalidate method="POST">
+              {{form.hidden_tag()}}
+              <div class="form_header py-4">
+                <h2 class="font-weight-bold">ADMIN LOGIN PAGE</h2>
+              </div>
+              <div class="form_body py-4">
+                <div class="form-row my-2">
+                  <label class="label col-md-4">E-mail</label>
+                  <div class="col-md-6">
+                    {{form.email_input()}}
+                    {% if form.email_input.errors %}
+                    {% for error in form.email_input.errors %}
+                        <span class="error">{{error}}</span>
+                    {% endfor %}
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <label class="label col-md-4">Password</label>
+                  <div class="col-md-6">
+                      {{form.password_input()}}
+                      {% if form.password_input.errors %}
+                      {% for error in form.password_input.errors %}
+                          <span class="error">{{error}}</span>
+                      {% endfor %}
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="form-row my-2">
+                  <label class="label col-md-4 pt-2">remember me</label>
+                  <div class="col-md-6 pt-md-3">
+                      {{form.remember_me_box()}}
+                  </div>
+                </div>
+                {{form.next_url()}}
+                {{form.submit()}}
+                <div class="form-row my-4">
+                  <a class="link1 col-md-12" href="#">Forget password</a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+<script src="{{static_autoversion('signin_validation.js')}}"></script>
+<script>user_next_url("{{ request.args.get('next_url', '') }}")</script>
+
+{% endblock %}

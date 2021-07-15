@@ -1,0 +1,99 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+body{
+    background-image: url('background_42705-105.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* navbar */
+
+.nav-link {
+    color: slategray;
+    text-transform: uppercase;
+}
+
+.nav-link:hover,.nav-link:active{
+    color: white;
+}
+
+.navbar-brand{
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+}
+
+.navbar-brand:hover{
+    color: white;
+}
+
+.navbar-toggler{
+    background-color: lightseagreen;
+}
+
+.dropdown-toggle::after{
+    display: none;
+}
+
+.btn-warning:hover{
+    background-color: rgba(73, 145, 123, 0.603);
+}
+
+/* end of navbar */
+
+
+/* signup form */
+
+.first-row{
+    margin-top: 80px;
+    background: transparent;
+}
+.img-fluid{
+    width: 550px;
+    height: 500px;
+}
+h3{
+    font-size: 25px;
+    color: black;
+}
+.fa-address-book{
+    float: right;
+}
+.main{
+    box-shadow: 5px 5px 40px 20px rgba(0, 0, 0, 0.4);
+    background-color: rgba(9, 209, 92, 0.815);
+    border-radius: 30px;
+}
+.label{
+    color: white;
+    font-weight: normal;
+    margin-top: 15px;
+    font-size: 19px;
+}
+.form-control{
+    color: black;
+    background: transparent;
+    border-radius: 0px;
+    border: 0px;
+    border-bottom: 1px solid white;
+    font-size: 18px;
+    height: 40px;
+    width: 250px;
+
+}
+.btn-info{
+    font-size: 18px;
+    width: 120px;
+    margin-bottom: 30px;
+    margin-left: 50px;
+
+}
+.btn-info:hover{
+    background-color: black;
+}
+.error{
+    color: red;
+}
+

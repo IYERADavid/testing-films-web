@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | Signup
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" type= "text/css" href= "{{static_autoversion('signup.css')}}">
+{% endblock %}
+
+{% block body %}
+ <!--header-->
+ <nav class="navbar navbar-expand-sm bg-dark">
+    <div class="container">
+     <a class="navbar-brand active" href="{{url_for('home')}}">IWaCU FILMS</a>
+     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+            <path fill-rule="evenodd" d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+            <circle cx="3.5" cy="5.5" r=".5"/>
+            <circle cx="3.5" cy="8" r=".5"/>
+            <circle cx="3.5" cy="10.5" r=".5"/>
+          </svg>
+     </button>
+     <div class="collapse navbar-collapse" id="collapse-target">
+         <ul class="navbar-nav ml-auto"> 
+             <li class="nav-item">
+                 <a href="#" class="nav-link">contact</a>
+             </li>
+             <li class="nav-item">
+                <a href="#" class="nav-link">about</a>
+             </li>
+             <li class="nav-item">
+              <a href="{{url_for('signin')}}" class="nav-link btn btn-warning">signin</a>
+             </li>
+         </ul>
+     </div>
+     </div>
+</nav>
+
+
+<div class="container">
+    <div class="row first-row no-gutters">
+        <div class="col-md-4 col-lg-6">
+            <img class="img-fluid" src="{{url_for('static',filename='home.jpg')}}"/>
+        </div>
+        <div class="col-md-8 col-lg-6 main px-3">
+            <div class="row">
+                <div class="col">
+                    <h3>register now</h3>
+                </div>
+                <div class="col">
+                    <i class="fas fa-address-book fa-3x"></i>
+                </div>
+            </div>
+            <br>
+            <form id="form" novalidate method="POST">
+                {{form.hidden_tag()}}
+                <div class="row">
+                    <label class="label col-md-4 control-label">First name</label>
+                    <div class="col-md-6">
+                        {{form.first_name_input()}}
+                        {% if form.first_name_input.errors %}
+                        {% for error in form.first_name_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="label col-md-4 control-label">Last name</label>
+                    <div class="col-md-6">
+                        {{form.last_name_input()}}
+                        {% if form.last_name_input.errors %}
+                        {% for error in form.last_name_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="label col-md-4 control-label">Middle name</label>
+                    <div class="col-md-6">
+                        {{form.middle_name_input()}}
+                        {% if form.middle_name_input.errors %}
+                        {% for error in form.middle_name_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="label col-md-4 control-label">E-mail</label>
+                    <div class="col-md-6">
+                        {{form.email_input()}}
+                        {% if form.email_input.errors %}
+                        {% for error in form.email_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="label col-md-4 control-label">Password</label>
+                    <div class="col-md-6">
+                        {{form.password_input()}}
+                        {% if form.password_input.errors %}
+                        {% for error in form.password_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="label col-md-4 control-label">Confirm-Password</label>
+                    <div class="col-md-6">
+                        {{form.confirm_password_input()}}
+                        {% if form.confirm_password_input.errors %}
+                        {% for error in form.confirm_password_input.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <br>
+                {{form.submit()}}
+            </form>
+        </div>
+    </div>
+</div>
+<script src="{{static_autoversion('signup_validation.js')}}"></script>
+{% endblock %}

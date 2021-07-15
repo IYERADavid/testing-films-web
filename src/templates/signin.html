@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | Signin
+{% endblock %}
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('signin.css')}}">
+{% endblock head %}
+
+
+{% block body %}
+
+  <!--header-->
+  <nav class="navbar navbar-expand-sm bg-dark">
+    <div class="container">
+     <a class="navbar-brand active" href="{{url_for('home')}}">IWaCU FILMS</a>
+     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+         <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-card-list" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M14.5 3h-13a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-13z"/>
+            <path fill-rule="evenodd" d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5z"/>
+            <circle cx="3.5" cy="5.5" r=".5"/>
+            <circle cx="3.5" cy="8" r=".5"/>
+            <circle cx="3.5" cy="10.5" r=".5"/>
+          </svg>
+     </button>
+     <div class="collapse navbar-collapse" id="collapse-target">
+         <ul class="navbar-nav ml-auto"> 
+             <li class="nav-item">
+                 <a href="#" class="nav-link">contact</a>
+             </li>
+             <li class="nav-item">
+                <a href="#" class="nav-link">about</a>
+             </li>
+             <li class="nav-item">
+              <a href="{{url_for('signup')}}" class="nav-link btn btn-info">signup</a>
+             </li>
+         </ul>
+     </div>
+     </div>
+</nav>
+
+
+<section class="form vertical-center">
+  <div class="container">
+    <div class="row no-gutters">
+      <div class="col-md-4 col-lg-6">
+        <img class="img-fluid" src="{{url_for('static',filename='home.jpg')}}"/>
+      </div>
+      <div class="col-md-8 col-lg-6 px-5 py-3">
+        <h1 class="font-weight-bold py-3">iwacu films</h1>
+        <h4>signin to your acoount</h4>
+        <form id="form" novalidate method="POST">
+            {{form.hidden_tag()}}
+            <div class="form-row my-2">
+                <label class="label col-md-4">E-mail</label>
+                <div class="col-md-6">
+                  {{form.email_input()}}
+                  {% if form.email_input.errors %}
+                  {% for error in form.email_input.errors %}
+                      <span class="error">{{error}}</span>
+                  {% endfor %}
+                  {% endif %}
+                </div>
+            </div>
+            <div class="form-row my-2">
+                <label class="label col-md-4">Password</label>
+                <div class="col-md-6">
+                    {{form.password_input()}}
+                    {% if form.password_input.errors %}
+                    {% for error in form.password_input.errors %}
+                        <span class="error">{{error}}</span>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+            <div class="form-row my-2">
+                <label class="label col-md-4">remember me</label>
+                <div class="col-md-6 pt-md-3">
+                    {{form.remember_me_box()}}
+                </div>
+            </div>
+            {{form.next_url()}}
+            {{form.submit()}}
+            <div class="form-row">
+                <a class="link1 col-md-12" href="#">Forget password</a>
+                <p class="col-md-12">Need an account? <a href="{{url_for('signup')}}">signup here</a></p>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="{{static_autoversion('signin_validation.js')}}"></script>
+<script>user_next_url("{{ request.args.get('next_url', '') }}")</script>
+
+
+{% endblock body %}

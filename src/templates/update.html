@@ -1,0 +1,174 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | admin interface
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('update.css')}}">
+    <script src="{{static_autoversion('videos.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{{url_for('videos_uploaded')}}">
+        <i class="fas fa-video"></i>
+        Videos
+      </a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('admin_home')}}">Home</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('all_users')}}">users</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('upload_video')}}">upload</a>
+          </li>
+          <li class="nav-item dropdown ml-lg-5">
+            <a href="#" class="nav-link dropdown-toggle" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" >
+               <img alt="" class="img-fluid rounded-circle" src="{{url_for('view_profile')}}"/>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                <li class="dropdown-item">
+                   <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
+                </li>
+                <div class="dropdown-divider"></div>
+                <li class="dropdown-item">
+                    <a class="dropdown-item" href="{{url_for('admin_profile')}}">Profile</a>
+                 </li>
+                <li class="dropdown-item">
+                   <a class="dropdown-item" href="{{url_for('signout')}}">Signout</a>
+                </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container main_div  my-5 p-5">
+    <div class="show_path">
+        <p><a href="{{url_for('admin_home')}}">home</a> >> <a href="{{url_for('videos_uploaded')}}">videos</a> >> <a href="{{url_for('update_video',filename= video.video_filename)}}">Update or Delete : {{video.video_name}}</a></p>
+    </div>
+    <div class="page_header py-4 text-center">
+        <h2 class="font-weight-bold">UPDATE OR DELETE VIDEO HERE NOW</h2>
+    </div>
+    <div class="row d-flex justify-content-center py-4">
+        <div class="col-md-8">
+            <video class="block" width="100%" height="500px" controls>
+                <source src="{{url_for('view_file',name= video.video_filename)}}">
+            </video>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="video_header py-4 border-bottom">
+                <h4 class="font-weight-normal"> CURRENT INFORMATION</h4>
+            </div>
+            <div class="video_info pt-4">
+                <div class="mb-3">
+                    <p>Video Name :</p>
+                    <p class="text-primary">{{video.video_name}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Description :</p>
+                    <p class="text-primary">{{video.video_description}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video filename :</p>
+                    <p class="text-primary">{{video.video_filename}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Photo filename :</p>
+                    <p class="text-primary">{{video.video_photo}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Genre :</p>
+                    <p class="text-primary">{{video.video_genre}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Year :</p>
+                    <p class="text-primary">{{video.video_year}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Language :</p>
+                    <p class="text-primary">{{video.video_language}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video Active :</p>
+                    <p class="text-primary">{{video.active}}</p>
+                </div>
+                <div class="mb-3">
+                    <p> Video time saved :</p>
+                    <p class="text-primary">{{video.video_time_saved}}</p>
+                </div>
+
+            </div>
+            <div class="video_footer pt-3 pb-4 d-flex justify-content-center">
+                <a href="{{url_for('delete_video', filename=video.video_filename)}}" type="button" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="video-photo text-center">
+                <h5>Video Photo</h5>
+                <img class="rounded" src="{{url_for('view_file', name=video.video_photo)}}" width="210px" height="210px">
+            </div>
+            <form action="" novalidate method="POST" enctype="multipart/form-data">
+                {{form.hidden_tag()}}
+                <div class="form_header py-4 border-bottom">
+                    <h4 class="font-weight-normal"> NEW INFORMATION</h4>
+                </div>
+                <div class="form_body py-4">
+                    <div class="mb-3">
+                        <label for="video_name" class="form-label">Video Name</label>
+                        {{form.video_name()}}
+                        {% if form.video_name.errors %}
+                        {% for error in form.video_name.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="video_description" class="form-label"> Video Description</label>
+                        {{form.video_description()}}
+                        {% if form.video_description.errors %}
+                        {% for error in form.video_description.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        <label for="video_year" class="form-label">Video year</label>
+                        {{form.video_year()}}
+                        {% if form.video_year.errors %}
+                        {% for error in form.video_year.errors %}
+                            <span class="error">{{error}}</span>
+                        {% endfor %}
+                        {% endif %}
+                      </div>
+                      <div class="mb-3">
+                        <label for="video_genre" class="form-label"> Video Genre : </label>
+                        {{form.video_genre()}}
+                      </div>
+                      <div class="mb-3">
+                        <label for="video_genre" class="form-label"> Video Language : </label>
+                        {{form.video_language()}}
+                      </div>
+                </div>
+                <div class="form_footer py-4 d-flex justify-content-center">
+                    {{form.submit()}}
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

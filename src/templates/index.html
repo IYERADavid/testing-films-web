@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | web
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{static_autoversion('index.css')}}">
+{% endblock %}
+
+{% block body %}
+<div class="container h-100">
+    <div class="text-center">
+        <h1>WELCOME TO IWACU FILMS SITE</h1>
+    </div>
+    <div class="row no-gutters h-75">
+        <div class="col-md-6 align-self-center">
+            <h2 class="text-center"><a type="button" class="btn btn-info" href="{{url_for('signup')}}">SIGNUP NOW</a></h2>
+        </div>
+        <div class="col-md-6 align-self-center">
+            <h2 class="text-center"><a type="button" class="btn btn-success" href="{{url_for('signin')}}">SIGNIN HERE</a></h2>
+        </div>
+    </div>
+</div>
+{% endblock %}

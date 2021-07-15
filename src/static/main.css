@@ -1,0 +1,53 @@
+*{
+    font-family: new time roman;
+}
+
+.img-fluid{
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    border: 2px solid rgb(0, 217, 255);
+}
+.dropdown-toggle::after{
+    display: none;
+}
+
+.on-hover:hover>.dropdown-menu{
+    display: block;
+}
+
+/* flask form error */
+.error{
+    color: red;
+}
+/* end of flask form error */
+
+/* flash messages */
+
+.alert{
+    background-color: mediumturquoise;
+    text-align: center;
+}
+.invalid_data{
+    color: rgb(3, 3, 3);
+}
+.new_user{
+    color: rgb(38, 134, 38);
+}
+.existing_email{
+    color: rgb(107, 34, 224);
+}
+.user_logged_in{
+    color: rgb(59, 52, 55);
+}
+.signout{
+    color: rgb(71, 75, 73);
+}
+.video_updated,.video_deleted{
+    color: #ecedf3;
+}
+.video_update_error,.video_delete_error{
+    color: white;
+}
+
+/* end of flash message */

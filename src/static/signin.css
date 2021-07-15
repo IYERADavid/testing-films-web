@@ -1,0 +1,93 @@
+*{
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: rgb(187, 212, 212);
+}
+
+/* navbar */
+
+.nav-link {
+    color: slategray;
+    text-transform: uppercase;
+}
+
+.nav-link:hover,.nav-link:active{
+    color: white;
+}
+
+.navbar-brand{
+    font-weight: bold;
+    font-size: 2rem;
+    color: white;
+}
+
+.navbar-brand:hover{
+    color: white;
+}
+
+.navbar-toggler{
+    background-color: lightseagreen;
+}
+
+.dropdown-toggle::after{
+    display: none;
+}
+
+.btn-info{
+    color: white;
+}
+
+.btn-info:hover{
+    background-color: mediumaquamarine;
+}
+
+/* end of navbar */
+
+.row{
+    background-color: white;
+    border-radius: 35px;
+    box-shadow: 12px 12px 22px grey;
+}
+
+.img-fluid{
+    width: 550px;
+    height: 460px;
+    border-top-left-radius: 35px;
+    border-bottom-left-radius: 35px;
+}
+
+.label{
+    color: black;
+    font-weight: normal;
+    margin-top: 15px;
+    font-size: 19px;
+}
+
+.login-form-control{
+    color: black;
+    background-color: rgb(124, 238, 232);
+    border-radius: 0px;
+    border: 0px;
+    border-bottom: 1px solid white;
+    font-size: 18px;
+    height: 40px;
+}
+.btn-success{
+    font-size: 18px;
+    width: 120px;
+    margin-bottom: 10px;
+}
+.link1{
+    text-align: center;
+}
+
+.vertical-center {
+    min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+    min-height: 100vh; /* These two lines are counted as one :-)       */
+    display: flex;
+    align-items: center;
+}

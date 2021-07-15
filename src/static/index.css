@@ -1,0 +1,8 @@
+/* user view screen */
+html, body {
+    height: 100%;
+    background-color: black;
+}
+.container{
+    background-color: rgb(94, 250, 154);
+}

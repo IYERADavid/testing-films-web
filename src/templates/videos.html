@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | admin interface
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('videos.css')}}">
+    <script src="{{static_autoversion('videos.js')}}"></script>
+{% endblock %}
+
+{% block body %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+      <a class="navbar-brand" href="{{url_for('videos_uploaded')}}">
+        <i class="fas fa-video"></i>
+        Videos
+      </a>
+      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="collapse-target">
+        <ul class="navbar-nav ml-auto mb-2 mb-lg-0">
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('admin_home')}}">Home</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('all_users')}}">users</a>
+          </li>
+          <li class="nav-item mx-5 pt-3">
+            <a class="nav-link" href="{{url_for('upload_video')}}">upload</a>
+          </li>
+          <li class="nav-item dropdown ml-lg-5">
+            <a href="#" class="nav-link dropdown-toggle" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true"
+            aria-expanded="false" >
+               <img alt="" class="img-fluid rounded-circle" src="{{url_for('view_profile')}}"/>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                <li class="dropdown-item">
+                   <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
+                </li>
+                <div class="dropdown-divider"></div>
+                <li class="dropdown-item">
+                  <a class="dropdown-item" href="{{url_for('admin_profile')}}">Profile</a>
+                </li>
+                <li class="dropdown-item">
+                   <a class="dropdown-item" href="{{url_for('signout')}}">Signout</a>
+                </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+</nav>
+
+<div class="container main_div my-5 p-5">
+    <div class="show_path mb-4">
+      <p><a href="{{url_for('admin_home')}}">home</a> >> <a href="{{url_for('videos_uploaded')}}">videos</a></p>
+    </div>
+    <div class="header text-center">
+      <h3 class="font-weight-bold">ALL UPLOADED VIDEOS</h3>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-success table-hover text-center">
+            <thead>
+              <tr>
+                <th scope="col">video id</th>
+                <th scope="col">video name</th>
+                <th scope="col">video description</th>
+                <th scope="col">video genre</th>
+                <th scope="col">video year</th>
+                <th scope="col">video language</th>
+                <th scope="col">video photo</th>
+                <th scope="col">more</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for video in videos %}
+                <tr>
+                    <th scope="row">{{video.video_id}}</th>
+                    <td>{{video.video_name}}</td>
+                    <td>{{video.video_description}}</td>
+                    <td>{{video.video_genre}}</td>
+                    <td>{{video.video_year}}</td>
+                    <td>{{video.video_language}}</td>
+                    <td><img class="rounded-circle" src="{{url_for('view_file', name=video.video_photo)}}" width="50px" height="50px"></td>
+                    <!-- Button trigger modal -->
+                    <td>
+                      <button type="button" class="btn btn-info" onclick="get_video_info('{{loop.index}}', '{{video.video_id}}', '{{video.video_name}}', '{{video.active}}', '{{video.video_time_saved}}')" data-toggle="modal" data-target="#exampleModalCenter"><i class="fas fa-eye"></i></button>
+                    </td>
+                 </tr>
+                <div class="video_hidden_tag hidden_element">
+                    <video id="{{loop.index}}" class="block" width="100%" height="100%" controls>
+                      <source src="{{url_for('view_file',name= video.video_filename)}}">
+                    </video>
+                </div>
+                <div class="video_btn_tag hidden_element">
+                  <div id="button" class="{{loop.index}}">
+                    <a href="{{url_for('update_video',filename= video.video_filename)}}"><button type="button" class="btn btn-secondary">
+                      <i class="fas fa-exchange-alt"></i> Update or Delete</button></a>
+                  </div>
+                </div>
+              {% endfor %}
+                    <!-- Modal -->
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg rounded" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title pl-4" id="exampleModalLongTitle">video</h4>
+                        <button onclick="remove_data()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div id="modal_body" class="modal-body">
+                        <div class="row">
+                          <div class="col-md-6">
+                            <div id="modal_video"></div>
+                          </div>
+                          <div class="col-md-6">
+                            <div class="video_info py-5">
+                              <p>Video id :  <span id="video_id"></span></p>
+                              <p>Video Name :  <span id="video_name"></span></p>
+                              <p>Video active :  <span id="video_description"></span></p>
+                              <p>Upload time :  <span id="upload_time"></span></p>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div id="navigation_btn" class="modal-footer d-flex justify-content-center"></div>
+                    </div>
+                </div>
+            </div>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

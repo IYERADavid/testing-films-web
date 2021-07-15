@@ -1,0 +1,104 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ IWaCU FILMS | home
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{{static_autoversion('home.css')}}">
+{% endblock %}
+
+
+{% block body %}
+<!--header-->
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container">
+     <a class="navbar-brand active" href="{{url_for('home')}}">
+        <i class="fa fa-film" aria-hidden="true"></i>
+        Vendor Films
+     </a>
+     <form action="" method="POST">
+        <input name="movie_name" type="search" placeholder="enter movie name" required>
+        <input class="btn btn-info" type="submit" value="search">
+     </form>
+     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="collapse-target">
+         <ul class="navbar-nav ml-auto">
+             <li class="nav-item pt-3">
+                 <a href="{{url_for('recent_videos')}}" class="nav-link">recent movies</a>
+             </li>   
+             <li class="nav-item pt-3">
+                 <a href="#" class="nav-link">about</a>
+             </li>
+             <li class="nav-item pt-3">
+                <a href="#" class="nav-link">contact</a>
+             </li>
+             <li class="nav-item dropdown ml-lg-5">
+                <a href="#" class="nav-link dropdown-toggle" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" >
+                   <img alt="" class="img-fluid rounded-circle" src="{{url_for('view_profile')}}"/>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                    <li class="dropdown-item">
+                       <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                    <li class="dropdown-item">
+                       <a class="dropdown-item" href="{{url_for('signout')}}">signout</a>
+                    </li>
+                </ul>
+              </li>    
+         </ul>
+     </div>
+    </div>
+</nav>
+<div class="container p-4">
+    <div class="filter_by pb-4">
+        <div class="header-panel pb-3 border-bottom">
+            <a href="{{url_for('videos_genre', name='Action')}}" type="button" class="btn btn-warning">Genre</a>
+            <a href="{{url_for('videos_year', number='2021')}}" type="button" class="btn btn-light">Year</a>
+            <a href="{{url_for('videos_language', name='English')}}" type="button" class="btn btn-light">Language</a>
+        </div>
+        <div class="body-panel pt-3">
+            <a href="{{url_for('videos_genre', name='Action')}}" type="button" class="btn btn-light mb-2">Action</a>
+            <a href="{{url_for('videos_genre', name='Adventure')}}" type="button" class="btn btn-light mb-2">Adventure</a>
+            <a href="{{url_for('videos_genre', name='Animation')}}" type="button" class="btn btn-light mb-2">Animation</a>
+            <a href="{{url_for('videos_genre', name='Biography')}}" type="button" class="btn btn-light mb-2">Biography</a>
+            <a href="{{url_for('videos_genre', name='Documentary')}}" type="button" class="btn btn-light mb-2">Documentary</a>
+            <a href="{{url_for('videos_genre', name='Drama')}}" type="button" class="btn btn-light mb-2">Drama</a>
+            <a href="{{url_for('videos_genre', name='Family')}}" type="button" class="btn btn-light mb-2">Family</a>
+            <a href="{{url_for('videos_genre', name='Fantasy')}}" type="button" class="btn btn-light mb-2">Fantasy</a>
+            <a href="{{url_for('videos_genre', name='Game-show')}}" type="button" class="btn btn-light mb-2">Game-show</a>
+            <a href="{{url_for('videos_genre', name='History')}}" type="button" class="btn btn-light mb-2">History</a>
+            <a href="{{url_for('videos_genre', name='Horror')}}" type="button" class="btn btn-light mb-2">Horror</a>
+            <a href="{{url_for('videos_genre', name='Music')}}" type="button" class="btn btn-light mb-2">Music</a>
+            <a href="{{url_for('videos_genre', name='Mystery')}}" type="button" class="btn btn-light mb-2">Mystery</a>
+            <a href="{{url_for('videos_genre', name='News')}}" type="button" class="btn btn-light mb-2">News</a>
+            <a href="{{url_for('videos_genre', name='Romance')}}" type="button" class="btn btn-light mb-2">Romance</a>
+            <a href="{{url_for('videos_genre', name='Sport')}}" type="button" class="btn btn-light mb-2">Sport</a>
+            <a href="{{url_for('videos_genre', name='Talk-show')}}" type="button" class="btn btn-light mb-2">Talk-show</a>
+            <a href="{{url_for('videos_genre', name='War')}}" type="button" class="btn btn-light mb-2">War</a>
+            <a href="{{url_for('videos_genre', name='Western')}}" type="button" class="btn btn-light mb-2">Western</a>
+            <a href="{{url_for('videos_genre', name='Adult')}}" type="button" class="btn btn-light mb-2">Adult</a>
+        </div>
+    </div>
+
+    <div class="row">
+    {% for video in videos %}
+        <div class="col-md-3 my-2">
+            <a href="{{url_for('single_video', video_id=video.video_id)}}">
+                <div class="card">
+                    <img class="card-img-top" src="{{url_for('view_file', name=video.video_photo)}}" alt="Card image cap">
+                    <div class="card-body">
+                    <p class="card-text text-center">{{video.video_name}}</p>
+                </div>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

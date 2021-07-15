@@ -1,0 +1,10 @@
+body{
+    background-color: #ecedf3;
+}
+.main_div{
+    background-color: white;
+}
+.hidden_element{
+    display:none
+}
+
