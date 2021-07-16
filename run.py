@@ -146,9 +146,11 @@ def videos_language(name):
 @app.route('/movie/<video_id>')
 @signin_required
 def single_video(video_id):
+    user_id = session.get('user_id', None)
+    user = UserDatabaseClient.get_user(user_id)
     video = UserDatabaseClient.get_video(video_id)
     if video:
-        return render_template('video.html',video=video)
+        return render_template('video.html',video=video, user=user)
     flash('The video you are trying to access does not exist')
     return redirect(url_for('home'))
 

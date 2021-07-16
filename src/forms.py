@@ -139,13 +139,15 @@ class Video_uploader(FlaskForm):
         '',
         validators=[
             FileRequired(message='You must fillout this field!'),
-            FileAllowed(['jpg', 'png', 'jpeg'], message="un supported format")]
+            FileAllowed(['jpg','jpeg','png','gif','tiff','psd','al','raw'],
+            message="un supported format")]
     )
     video_file = FileField(
         '',
         validators=[
             FileRequired(message='You must fillout this field!'),
-            FileAllowed(['mp4', 'avi', 'm4a'], message="un supported format")]
+            FileAllowed(['mp4', 'avi', 'mov','wmv','flv','webm','avchd','mkv'],
+            message="un supported format")]
     )
     video_year = IntegerField(
         '',
