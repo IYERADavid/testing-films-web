@@ -8,7 +8,7 @@ app = Flask(__name__)
 # TODO add a function to retrieve environment variables
 app.config['SECRET_KEY'] = "ckkkkkkkkkkfigigigigifidifigjbjgj"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../storage/database.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///storage/database.db'
 basedir = os.path.abspath(os.path.dirname(__file__))
 upload_forder = basedir + "/storage/uploads/"
 app.config['UPLOAD_FOLDER'] = upload_forder
