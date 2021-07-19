@@ -23,8 +23,8 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-upload_forder = basedir + get_env("uploads_folder")
-app.config['UPLOAD_FOLDER'] = upload_forder
+upload_folder = basedir + get_env("uploads")
+app.config['UPLOAD_FOLDER'] = upload_folder
 app.autoversion = True
 Autoversion(app)
 app.permanent_session_lifetime = timedelta(days=7)
