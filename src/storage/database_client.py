@@ -251,6 +251,8 @@ class UserDatabaseClient:
     @staticmethod
     def update_profile(user_id,profile_name,profile):
         user = User.query.filter_by(user_id=user_id).one()
+        if user.profile_picture:
+            os.remove(os.path.join(app.config['UPLOAD_FOLDER'], user.profile_picture))
         filename = str(user.user_id) + profile_name
         profile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         user.profile_picture = filename

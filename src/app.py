@@ -23,7 +23,7 @@ app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-upload_folder = basedir + get_env("uploads")
+upload_folder = basedir + get_env("uploads_path")
 app.config['UPLOAD_FOLDER'] = upload_folder
 app.autoversion = True
 Autoversion(app)
