@@ -1,7 +1,10 @@
 import os
+import shortuuid
+from datetime import datetime
 from src.app import db,app
 from src.storage.database_tables import User, Role, Video, roles_users
 from passlib.hash import sha256_crypt
+from src.settings import get_env
 
 
 class UserDatabaseClient:
@@ -11,20 +14,21 @@ class UserDatabaseClient:
         def add_role_available(name, description):
             role = Role(name=name, description=description)
             db.session.add(role)
-        add_role_available(name="Super-admin",description="head_of_adminstration")
-        add_role_available(name="Staff-admin",description="member_of_adminstration")
-        add_role_available(name="End-user",description="client_or_user")
-        hashed_password = sha256_crypt.encrypt("testing")
+        add_role_available(name=get_env("super_role"),description="head_of_adminstration")
+        add_role_available(name=get_env("staff_role"),description="member_of_adminstration")
+        add_role_available(name=get_env("user_role"),description="client_or_user")
+        hashed_password = sha256_crypt.encrypt(get_env("password"))
         new_user = User(
-            first_name="iyera", last_name="david", middle_name="fred",
-            email="testing@gmail.com", password=hashed_password)
+            first_name=get_env("first_name"), last_name=get_env("last_name"),
+            middle_name=get_env("middle_name"), email=get_env("email_username"),
+            password=hashed_password)
         db.session.add(new_user)
         def add_user_role(user, role):
             user_role = Role.query.filter_by(name=role).one()
             user_role.users.append(user)
-        add_user_role(user=new_user, role="Super-admin")
-        add_user_role(user=new_user, role="Staff-admin")
-        add_user_role(user=new_user, role="End-user")
+        add_user_role(user=new_user, role=get_env("super_role"))
+        add_user_role(user=new_user, role=get_env("staff_role"))
+        add_user_role(user=new_user, role=get_env("user_role"))
         db.session.commit()
         return new_user
 
@@ -32,6 +36,12 @@ class UserDatabaseClient:
     def get_user(id):
         user = User.query.filter_by(user_id=id).one()
         return user
+
+    @staticmethod
+    def get_user_id(email):
+        user = User.query.filter_by(email=email).one()
+        return user.user_id
+
     @staticmethod
     def get_video(video_id):
         video = Video.query.filter_by(video_id=video_id).one_or_none()
@@ -83,12 +93,16 @@ class UserDatabaseClient:
     def add_new_video(
         video_name,video_description,video_photo,photo_file,video_filename,
         video_file,video_year,video_genre,video_language):
+        unique_video_filename = str(
+            shortuuid.uuid()) + str(datetime.now()).replace(':','.') + video_filename 
+        unique_photo_filename = str(
+            shortuuid.uuid()) + str(datetime.now()).replace(':','.') + video_photo
         new_video = Video(
             video_name=video_name,video_description=video_description,
-            video_photo=video_photo,video_filename=video_filename,
+            video_photo=unique_photo_filename,video_filename=unique_video_filename,
             video_year=video_year,video_genre=video_genre,video_language=video_language)
-        photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], video_photo))
-        video_file.save(os.path.join(app.config['UPLOAD_FOLDER'], video_filename))
+        photo_file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_photo_filename))
+        video_file.save(os.path.join(app.config['UPLOAD_FOLDER'], unique_video_filename))
         db.session.add(new_video)
         db.session.commit()
         return new_video
@@ -119,6 +133,7 @@ class UserDatabaseClient:
     @staticmethod
     def delete_video(video_filename):
         video = Video.query.filter_by(video_filename=video_filename).one()
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], video.video_photo))
         os.remove(os.path.join(app.config['UPLOAD_FOLDER'], video.video_filename))
         db.session.delete(video)
         db.session.commit()
@@ -127,6 +142,7 @@ class UserDatabaseClient:
     @staticmethod
     def uploaded_videos():
         all_videos_info = Video.query.order_by(Video.video_id.desc())
+        needed_videos = all_videos_info.limit(60)
         return all_videos_info
     
 
@@ -135,23 +151,35 @@ class UserDatabaseClient:
     @staticmethod
     def videos_with_genre(name):
         all_videos_info = Video.query.filter_by(video_genre=name).all()
-        return all_videos_info
+        videos = []
+        for video in reversed(all_videos_info):
+            videos.append(video)
+        return videos
 
     @staticmethod
     def videos_with_year(number):
         number = int(number)
         all_videos_info = Video.query.filter_by(video_year=number).all()
-        return all_videos_info
+        videos = []
+        for video in reversed(all_videos_info):
+            videos.append(video)
+        return videos
 
     @staticmethod
     def videos_with_language(name):
         all_videos_info = Video.query.filter_by(video_language=name).all()
-        return all_videos_info
+        videos = []
+        for video in reversed(all_videos_info):
+            videos.append(video)
+        return videos
 
     @staticmethod
     def videos_with_name(name):
         all_videos_info = Video.query.filter_by(video_name=name).all()
-        return all_videos_info
+        videos = []
+        for video in reversed(all_videos_info):
+            videos.append(video)
+        return videos
 
     # this function query users that have End-user role only
     # and return them in descending order
@@ -198,5 +226,41 @@ class UserDatabaseClient:
     @staticmethod
     def new_videos():
         all_videos_info = Video.query.order_by(Video.video_year.desc())
-        twenty_videos_info = all_videos_info.limit(20) 
+        twenty_videos_info = all_videos_info.limit(40) 
         return twenty_videos_info
+
+    @staticmethod
+    def change_password(user_id,password):
+        user = User.query.filter_by(user_id=user_id).one()
+        hashed_password = sha256_crypt.encrypt(password)
+        user.password = hashed_password
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def delete_account(user_id):
+        user = User.query.filter_by(user_id=user_id).one()
+        for role in user.roles:
+            if role.name == get_env("super_role"):
+                return None
+        db.session.delete(user)
+        db.session.commit()
+        return user
+
+
+    @staticmethod
+    def update_profile(user_id,profile_name,profile):
+        user = User.query.filter_by(user_id=user_id).one()
+        filename = str(user.user_id) + profile_name
+        profile.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        user.profile_picture = filename
+        db.session.commit()
+        return user
+
+    @staticmethod
+    def remove_profile(user_id):
+        user = User.query.filter_by(user_id=user_id).one()
+        os.remove(os.path.join(app.config['UPLOAD_FOLDER'], user.profile_picture))
+        user.profile_picture = None
+        db.session.commit()
+        return user

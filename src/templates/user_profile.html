@@ -1,0 +1,118 @@
+{% extends "layout.html" %}
+
+{% block title %}
+ | admin interface
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{static_autoversion('home.css')}}">
+{% endblock %}
+
+{% block body %}
+<!--header-->
+<nav class="navbar navbar-expand-lg bg-dark">
+    <div class="container">
+     <a class="navbar-brand active" href="{{url_for('home')}}">
+        <i class="fa fa-film" aria-hidden="true"></i>
+        Vendor videos
+     </a>
+     <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
+       <span class="navbar-toggler-icon"></span>
+     </button>
+     <div class="collapse navbar-collapse" id="collapse-target">
+         <ul class="navbar-nav ml-auto">
+             <li class="nav-item mx-5 pt-3">
+                 <a href="{{url_for('recent_videos')}}" class="nav-link">recent videos</a>
+             </li>   
+             <li class="nav-item mx-5 pt-3">
+                 <a href="#" class="nav-link">about</a>
+             </li>
+             <li class="nav-item mx-5 pt-3">
+                <a href="#" class="nav-link">contact</a>
+             </li>
+             <li class="nav-item dropdown ml-lg-5">
+                <a href="#" class="nav-link dropdown-toggle" id="dropdownmenu1" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false" >
+                   <img alt="" class="img-fluid rounded-circle" src="{{url_for('view_profile')}}"/>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownmenu1">
+                    <li class="dropdown-item">
+                       <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
+                    </li>
+                    <div class="dropdown-divider"></div>
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" href="{{url_for('user_profile')}}">Profile</a>
+                     </li>
+                    <li class="dropdown-item">
+                       <a class="dropdown-item" href="{{url_for('signout')}}">signout</a>
+                    </li>
+                </ul>
+              </li>      
+         </ul>
+     </div>
+    </div>
+</nav>
+
+<div class="container my-5 p-5 bg-light">
+    <div class="row d-flex justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="profile">
+                <div class="profile_picture">
+                    <img class="rounded-circle mb-3" src="{{url_for('view_profile')}}" height="200px" width="200px">
+                </div>
+            </div>
+            <div class="profile-info">
+              <h4 class="text-dark">{{user.first_name}}  {{user.last_name}}</h4>
+              <div class="address pt-2">
+                <h6 class="pb-4"> ADDRESS : {{user.email}}</h6>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {{form.hidden_tag()}}
+                    <label class="ml-md-5">Update Profile :</label>
+                    {{form.profile_photo()}}
+                    {% if form.profile_photo.errors %}
+                    {% for error in form.profile_photo.errors %}
+                        <span class="error">{{error}}</span>
+                    {% endfor %}
+                    {% endif %}
+                    {{form.submit()}}
+                </form>
+                {% if user.profile_picture %}
+                <a href="{{url_for('remove_profile')}}" class="btn btn-warning mt-2">Remove current profile</a>
+                {% endif %}
+              </div>
+                <div class="main-info">
+                    <div class="mb-2 mt-4">
+                      <a class="btn btn-secondary px-5" href="{{url_for('change_password')}}">Reset Password</a>
+                    </div>
+                    <div class="my-2">
+                      <a class="btn btn-danger px-5" data-toggle="modal" data-target="#exampleModalCenter">Delete Account</a>
+                      <!-- Modal -->
+                      <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg rounded" role="document">
+                          <div class="modal-content d-flex justify-content-center">
+                            <div class="modal-header">
+                              <h4 class="modal-title pl-4" id="exampleModalLongTitle">DELETE ACCOUNT</h4>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div id="modal_body" class="modal-body">
+                              <div class="delete_info my-3"> 
+                                <h4>NB: you are going to delete your account permanently</h4>
+                              </div>
+                              <div class="buttons">
+                                <a class="btn btn-danger mx-2" type="button" href="{{url_for('remove_account')}}">Delete</a>
+                                <a class="btn btn-dark mx-2" type="button" data-dismiss="modal">Cancel</a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

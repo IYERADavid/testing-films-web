@@ -8,4 +8,3 @@ Flask-WTF==0.14.3
 WTForms==2.3.1
 passlib==1.7.2
 Flask-Autoversion==0.2.0
-gunicorn==19.10.0

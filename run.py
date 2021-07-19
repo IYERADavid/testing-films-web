@@ -1,11 +1,13 @@
-import os
-from src.app import app,db
-from src.forms import Signupform, Signinform, Video_uploader, Update_video
+from src.app import app, db, mail, ts
+from src.forms import Signupform, Signinform, Video_uploader, Update_video, \
+    Reset_password, New_password, Profile
 from src.storage.database_client import UserDatabaseClient
 from flask import render_template, redirect, url_for, flash, session, request, \
     send_file, send_from_directory
 from functools import wraps
 from werkzeug.utils import secure_filename
+from flask_mail import Message
+from src.settings import get_env
 
 
 
@@ -23,7 +25,7 @@ def signin_required(func):
                 instead signin first")
             return redirect(url_for('index'))
 
-        elif "/admin" in url_value:
+        elif get_env("admin_route") in url_value:
             flash(
                 u'You must login to continue on {}'.format(url_value),
                 'signin_required')
@@ -44,7 +46,7 @@ def admin_role_required(func):
     def secure_function(*args, **kwargs):
         user_id = session.get('user_id', None)
         user = UserDatabaseClient.get_user(user_id)
-        if UserDatabaseClient.user_has_role(user=user, user_role="Staff-admin"):
+        if UserDatabaseClient.user_has_role(user=user, user_role=get_env("staff_role")):
             return func(*args, **kwargs)
 
         flash(u'You are not allowed to visit this page {}'.format(request.url), 'page_error')
@@ -60,9 +62,9 @@ def Super_admin_role_required(func):
     def secure_function(*args, **kwargs):
         user_id = session.get('user_id', None)
         user = UserDatabaseClient.get_user(user_id)
-        if UserDatabaseClient.user_has_role(user=user, user_role="Super-admin"):
+        if UserDatabaseClient.user_has_role(user=user, user_role=get_env("super_role")):
             return func(*args, **kwargs)
-        elif UserDatabaseClient.user_has_role(user=user, user_role="Staff-admin"):
+        elif UserDatabaseClient.user_has_role(user=user, user_role=get_env("staff_role")):
             flash(
                 u'You are not allowed to visit this page {}'.format(request.url),
                 'page_error')
@@ -73,12 +75,11 @@ def Super_admin_role_required(func):
 
     return secure_function
 
-
-
+'''
 @app.before_first_request
 def create_admin():
     UserDatabaseClient.create_db_and_admin()
-
+'''
 
 # This route it is home for all users available for every one
 # espicially those who visit us for the first time or those
@@ -102,6 +103,32 @@ def home():
 
     videos = UserDatabaseClient.uploaded_videos()
     return render_template('home.html', user=user,videos=videos)
+
+@app.route('/home/profile', methods=['GET','POST'])
+@signin_required
+def user_profile():
+    form = Profile()
+    user_id = session.get('user_id', None)
+    user = UserDatabaseClient.get_user(user_id)
+    if form.validate_on_submit():
+        profile = form.profile_photo.data
+        profile_name = secure_filename(profile.filename)
+        UserDatabaseClient.update_profile(
+            user_id=user_id,profile_name=profile_name,profile=profile)
+        flash('Profile picture updated successfully',"update_success")
+        return redirect(url_for('user_profile'))
+
+    return render_template('user_profile.html', form=form,user=user)
+
+
+@app.route('/delete/profile')
+def remove_profile():
+    user_id = session.get('user_id', None)
+    UserDatabaseClient.remove_profile(user_id=user_id)
+    flash('Profile picture deleted successfully',"delete_success")
+    return redirect(url_for('user_profile'))
+
+
 
 @app.route('/home/watch-movies-Genre-<name>', methods=['GET', 'POST'])
 @signin_required
@@ -150,7 +177,7 @@ def single_video(video_id):
     video = UserDatabaseClient.get_video(video_id)
     if video:
         return render_template('video.html',video=video, user=user)
-    flash('The video you are trying to access does not exist')
+    flash('The video you are trying to access does not exist','invalid_data')
     return redirect(url_for('home'))
 
 @app.route('/recent_movies')
@@ -183,7 +210,7 @@ def signup():
             middle_name=middle_name_value, email=email_value,
             password=password_value)
 
-        UserDatabaseClient.add_user_role(user=user, role="End-user")
+        UserDatabaseClient.add_user_role(user=user, role=get_env("user_role"))
         flash(
             u'Account successful created for {}'.format(first_name_value),
             'new_user')
@@ -207,8 +234,6 @@ def signin():
             if user:
                 session.permanent = remember_me_value
                 session['user_id'] = user.user_id
-                session['first_name'] = user.first_name
-                session['last_name'] = user.last_name
                 flash(
                     '{} signed in successful'.format(user.first_name),
                     'user_logged_in')   
@@ -228,12 +253,65 @@ def signin():
 @app.route('/signout', methods=['GET'])
 @signin_required
 def signout():
+    user_id = session.get('user_id', None)
+    user = UserDatabaseClient.get_user(user_id)
+    session.pop('user_id', None)
     flash(
         u'{} signed out successful \
-        '.format(session.get('first_name', None)), 'user_logged_out')
+        '.format(user.first_name),'user_logged_out')
+    return redirect(url_for('index'))
+
+
+@app.route('/reset_password', methods=['GET','POST'])
+def change_password():
+    form = Reset_password()
+    if form.validate_on_submit():
+        user_email = form.email.data
+        user = UserDatabaseClient.check_if_email_exists(email=user_email)
+        if user:
+            user_id = UserDatabaseClient.get_user_id(email=user_email)
+            token = ts.dumps(user_id, salt=get_env("salt"))
+            password_reset_url = url_for('new_password',token=token,_external=True)
+            msg = Message(subject="Change password", recipients=[user_email])
+            msg.html = render_template('email.html', url=password_reset_url)
+            mail.send(msg)
+            flash('Check your email inbox to confirm password reset', 'password_reset')
+            return render_template('reset_password.html', form=form)
+        flash('Your email is invalid', 'invalid_data')
+        return redirect(url_for('change_password'))
+    return render_template('reset_password.html', form=form)
+
+
+@app.route("/new_password/<token>", methods=['GET','POST'])
+def new_password(token):
+    form = New_password()
+    try:
+        user_id = ts.loads(token, salt=get_env("salt"), max_age=86400)
+    except:
+        flash(
+            'It looks like you password reset request was expired instead you can try again here \
+            ', 'token_expired')
+        return redirect(url_for('change_password'))
+    if form.validate_on_submit():
+        password_value = form.password_input.data
+        user = UserDatabaseClient.change_password(user_id=user_id,password=password_value)
+        flash("{}'s password changed successfull".format(user.first_name),"new_password")
+        return redirect(url_for('signin'))
+    return render_template('new_password.html', form=form)
+
+
+@app.route('/delete/account')
+@signin_required
+def remove_account():
+    user_id = session.get('user_id', None)
+    user = UserDatabaseClient.delete_account(user_id=user_id)
+    if not user:
+        flash("This account can not be deleted","undeletable_account")
+        return redirect(url_for('admin_profile'))
     session.pop('user_id', None)
-    session.pop('first_name', None)
-    session.pop('last_name', None)
+    flash(
+        u"{}'s Acoount successfull deleted \
+        ".format(user.first_name),"user_deleted")
     return redirect(url_for('index'))
 
 
@@ -251,20 +329,13 @@ def admin_login():
                 email=email_value, password=password_value)
             if user:
                 if UserDatabaseClient.user_has_role(user=user, user_role="Staff-admin"):
-                    print(user)
-                    print(user.roles)
                     session.permanent = remember_me_value
                     session['user_id'] = user.user_id
-                    session['first_name'] = user.first_name
-                    session['last_name'] = user.last_name
-                    if next_url_value:
-                        flash(
-                            '{} logged in successful'.format(user.first_name),
-                            'user_logged_in')
-                        return redirect(next_url_value)
                     flash(
                         '{} logged in successful'.format(user.first_name),
                         'user_logged_in')
+                    if next_url_value:
+                        return redirect(next_url_value)
                     return redirect(url_for('admin_profile'))
                 flash(
                     u'Dear {} you are not allowed to login here instead try here \
@@ -315,8 +386,8 @@ def new_staff_admin():
             middle_name=middle_name_value, email=email_value,
             password=password_value)
 
-        UserDatabaseClient.add_user_role(user=user, role="Staff-admin")
-        UserDatabaseClient.add_user_role(user=user, role="End-user")
+        UserDatabaseClient.add_user_role(user=user, role=get_env("staff_role"))
+        UserDatabaseClient.add_user_role(user=user, role=get_env("user_role"))
         flash(
             u'Account with staff-admin role successful created for {}'.format(first_name_value),
             'new_user')
@@ -333,13 +404,22 @@ def all_staff_admins():
     staff_admins_info = UserDatabaseClient.all_staff_admins()
     return render_template('users.html', user=user,users=staff_admins_info)
 
-@app.route('/admin/profile')
+@app.route('/admin/profile',methods=['GET','POST'])
 @signin_required
 @admin_role_required
 def admin_profile():
+    form = Profile()
     user_id = session.get('user_id', None)
     user = UserDatabaseClient.get_user(user_id)
-    return render_template('admin_profile.html', user=user)
+    if form.validate_on_submit():
+        profile = form.profile_photo.data
+        profile_name = secure_filename(profile.filename)
+        UserDatabaseClient.update_profile(
+            user_id=user_id,profile_name=profile_name,profile=profile)
+        flash('Profile picture updated successfully')
+        return redirect(url_for('admin_profile'))
+
+    return render_template('admin_profile.html', form=form, user=user)
 
 @app.route('/admin/upload', methods=['GET', 'POST'])
 @signin_required
@@ -426,12 +506,12 @@ def delete_video(filename):
     return redirect(url_for('videos_uploaded'))
 
 
-@app.route('/admin/profile/view')
+@app.route('/profile/view')
 @signin_required
 def view_profile():
     user_id = session.get('user_id', None)
     user = UserDatabaseClient.get_user(user_id)
-    if user.profile_picture: 
+    if user.profile_picture:
         return send_from_directory(app.config["UPLOAD_FOLDER"], user.profile_picture)
 
     return send_from_directory(app.config["UPLOAD_FOLDER"], "default.png")

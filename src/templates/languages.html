@@ -18,7 +18,7 @@
         Vendor videos
      </a>
      <form action="" method="POST">
-        <input name="movie_name" type="search" placeholder="enter movie name" required>
+        <input name="movie_name" type="search" placeholder="enter video name" required>
         <input class="btn btn-info" type="submit" value="search">
      </form>
      <button class="navbar-toggler" data-toggle="collapse" data-target="#collapse-target">
@@ -27,7 +27,7 @@
      <div class="collapse navbar-collapse" id="collapse-target">
          <ul class="navbar-nav ml-auto">
              <li class="nav-item pt-3">
-                 <a href="{{url_for('recent_videos')}}" class="nav-link">recent movies</a>
+                 <a href="{{url_for('recent_videos')}}" class="nav-link">recent videos</a>
              </li>   
              <li class="nav-item pt-3">
                  <a href="#" class="nav-link">about</a>
@@ -45,6 +45,9 @@
                        <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
                     </li>
                     <div class="dropdown-divider"></div>
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" href="{{url_for('user_profile')}}">Profile</a>
+                     </li>
                     <li class="dropdown-item">
                        <a class="dropdown-item" href="{{url_for('signout')}}">signout</a>
                     </li>

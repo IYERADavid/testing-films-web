@@ -41,7 +41,7 @@
         <img class="img-fluid" src="{{url_for('static',filename='home.jpg')}}"/>
       </div>
       <div class="col-md-8 col-lg-6 px-5 py-3">
-        <h1 class="font-weight-bold py-3">iwacu films</h1>
+        <h1 class="font-weight-bold py-3">Vendor Videos</h1>
         <h4>signin to your acoount</h4>
         <form id="form" novalidate method="POST">
             {{form.hidden_tag()}}
@@ -76,7 +76,7 @@
             {{form.next_url()}}
             {{form.submit()}}
             <div class="form-row">
-                <a class="link1 col-md-12" href="#">Forget password</a>
+                <a class="link1 col-md-12" href="{{url_for('change_password')}}">Forget password</a>
                 <p class="col-md-12">Need an account? <a href="{{url_for('signup')}}">signup here</a></p>
             </div>
         </form>

@@ -8,8 +8,8 @@ roles_users = db.Table('roles_users',
 
 class Role(db.Model):
     role_id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(80), unique=True)
-    description = db.Column(db.String(255))
+    name = db.Column(db.String(15), unique=True)
+    description = db.Column(db.String(50))
 
 
 class User(db.Model):
@@ -23,7 +23,7 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     roles = db.relationship('Role', secondary=roles_users,
         backref=db.backref('users', lazy='dynamic'))
-    creation_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    creation_time = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
 
 
@@ -35,6 +35,6 @@ class Video(db.Model):
     video_description = db.Column(db.String(3000), nullable=False)
     active = db.Column(db.Boolean, default=True, nullable=False)
     video_year = db.Column(db.Integer, nullable=False)
-    video_genre = db.Column(db.String(100), nullable=False)
-    video_language = db.Column(db.String(100), nullable=False)
-    video_time_saved = db.Column(db.DateTime, default=datetime.utcnow)
+    video_genre = db.Column(db.String(30), nullable=False)
+    video_language = db.Column(db.String(30), nullable=False)
+    video_time_saved = db.Column(db.DateTime, default=datetime.now(), nullable=False)

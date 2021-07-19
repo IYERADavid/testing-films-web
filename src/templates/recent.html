@@ -23,7 +23,7 @@
      <div class="collapse navbar-collapse" id="collapse-target">
          <ul class="navbar-nav ml-auto">
              <li class="nav-item mx-5 pt-3">
-                 <a href="{{url_for('recent_videos')}}" class="nav-link text-light">recent movies</a>
+                 <a href="{{url_for('recent_videos')}}" class="nav-link text-light">recent videos</a>
              </li>   
              <li class="nav-item mx-5 pt-3">
                  <a href="#" class="nav-link">about</a>
@@ -41,6 +41,9 @@
                        <a class="dropdown-item font-weight-bold" href="##">{{user.first_name}} {{user.last_name}}</a>
                     </li>
                     <div class="dropdown-divider"></div>
+                    <li class="dropdown-item">
+                        <a class="dropdown-item" href="{{url_for('user_profile')}}">Profile</a>
+                     </li>
                     <li class="dropdown-item">
                        <a class="dropdown-item" href="{{url_for('signout')}}">signout</a>
                     </li>

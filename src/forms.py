@@ -155,7 +155,7 @@ class Video_uploader(FlaskForm):
             InputRequired(message='You must fillout this field!'),
             NumberRange(
                 min=1600,max=2022,
-                message="Video year must be made of 4 digits")],
+                message="Video year must be between 1600 and 2022")],
         render_kw={
             'class': 'form-control', 'id': 'video_year',
             'placeholder': 'eg: 2000'
@@ -235,3 +235,60 @@ class Update_video(FlaskForm):
         ], default='English'
     )
     submit = SubmitField('Update', render_kw={'class': 'btn btn-info'})
+
+class Reset_password(FlaskForm):
+    email = StringField(
+        '',
+        validators=[
+            InputRequired(message='You must fillout this field!'),
+            Length(
+                # Valid email must have the maximum length of 320 characters
+                # from
+                # https://www.rfc-editor.org/errata/eid1690#:~:text=It%20should%20say%3A-,In%20addition%20to
+                # %20restrictions%20on%20syntax%2C%20there%20is%20a%20length,total%20length%20of%20320%20characters.
+                max=320,
+                message="your email must be less than 321 characters!"),
+            email(message="your email is not valid")],
+        render_kw={
+            'id': 'email', 'class': 'form-control',
+            'placeholder': 'email'}
+    )
+    submit = SubmitField('Request', render_kw={'class': 'btn btn-info'})
+
+
+class New_password(FlaskForm):
+    password_input = PasswordField(
+        '',
+        validators=[
+            InputRequired(message="You must fillout this field!"),
+            Length(
+                min=6,
+                message='Your password must be greater than 5 characters')],
+        render_kw={
+            'id': 'password', 'class': 'form-control',
+            'placeholder': 'Password'}
+    )
+    confirm_password_input = PasswordField(
+        '',
+        validators=[
+            InputRequired(message="You must fillout this field!"),
+            EqualTo(
+                'password_input',
+                message="Your passwords does not match!")],
+        render_kw={
+            'id': 'confirm_password', 'class': 'form-control',
+            'placeholder': 'Re enter Password'}
+    )
+    submit = SubmitField('Submit', render_kw={'class': 'btn btn-success'})
+
+
+class Profile(FlaskForm):
+    profile_photo = FileField(
+        '',
+        validators=[
+            FileRequired(message='You must fillout this field!'),
+            FileAllowed(['jpg','jpeg','png','gif','tiff','psd','al','raw'],
+            message="un supported format")],
+    )
+    submit = SubmitField('Update', render_kw={'class': 'btn btn-info mr-md-3 mb-3'})
+
