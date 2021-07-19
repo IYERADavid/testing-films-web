@@ -75,11 +75,11 @@ def Super_admin_role_required(func):
 
     return secure_function
 
-'''
+
 @app.before_first_request
 def create_admin():
     UserDatabaseClient.create_db_and_admin()
-'''
+
 
 # This route it is home for all users available for every one
 # espicially those who visit us for the first time or those
