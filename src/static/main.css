@@ -2,6 +2,11 @@
     font-family: new time roman;
 }
 
+body{
+    min-height: 100vh;
+    position: relative;
+}
+
 .img-fluid{
     height: 50px;
     width: 50px;
@@ -53,7 +58,7 @@
 /* end of flash message */
 
 .page-footer{
-    position: fixed;
+    position: absolute;
     left: 0;
     right: 0;
     bottom: 0;

@@ -5,10 +5,11 @@ from flaskext.autoversion import Autoversion
 from datetime import timedelta
 from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail
-from dotenv import load_dotenv
+from src.export_variables import export_envs
 from src.settings import get_env
 
-load_dotenv()
+export_envs()
+
 app = Flask(__name__)
 # TODO add a function to retrieve environment variables
 app.config['SECRET_KEY'] = get_env("secret_key")

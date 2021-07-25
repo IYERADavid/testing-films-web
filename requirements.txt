@@ -9,4 +9,3 @@ WTForms==2.3.1
 passlib==1.7.2
 Flask-Autoversion==0.2.0
 Flask-Mail==0.9.1
-python-dotenv==0.18.0

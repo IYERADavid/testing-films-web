@@ -17,7 +17,7 @@ class UserDatabaseClient:
         add_role_available(name=get_env("super_role"),description="head_of_adminstration")
         add_role_available(name=get_env("staff_role"),description="member_of_adminstration")
         add_role_available(name=get_env("user_role"),description="client_or_user")
-        hashed_password = sha256_crypt.encrypt(get_env("password"))
+        hashed_password = sha256_crypt.encrypt(get_env("email_password"))
         new_user = User(
             first_name=get_env("first_name"), last_name=get_env("last_name"),
             middle_name=get_env("middle_name"), email=get_env("email_username"),
