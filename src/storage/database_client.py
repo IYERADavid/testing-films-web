@@ -9,29 +9,6 @@ from src.settings import get_env
 
 class UserDatabaseClient:
 
-    def create_db_and_admin():
-        db.create_all()
-        def add_role_available(name, description):
-            role = Role(name=name, description=description)
-            db.session.add(role)
-        add_role_available(name=get_env("super_role"),description="head_of_adminstration")
-        add_role_available(name=get_env("staff_role"),description="member_of_adminstration")
-        add_role_available(name=get_env("user_role"),description="client_or_user")
-        hashed_password = sha256_crypt.encrypt(get_env("email_password"))
-        new_user = User(
-            first_name=get_env("first_name"), last_name=get_env("last_name"),
-            middle_name=get_env("middle_name"), email=get_env("email_username"),
-            password=hashed_password)
-        db.session.add(new_user)
-        def add_user_role(user, role):
-            user_role = Role.query.filter_by(name=role).one()
-            user_role.users.append(user)
-        add_user_role(user=new_user, role=get_env("super_role"))
-        add_user_role(user=new_user, role=get_env("staff_role"))
-        add_user_role(user=new_user, role=get_env("user_role"))
-        db.session.commit()
-        return new_user
-
     @staticmethod
     def get_user(id):
         user = User.query.filter_by(user_id=id).one()

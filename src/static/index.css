@@ -1,6 +1,6 @@
 /* user view screen */
 html, body {
-    height: 100%;
+    height: 250px;
     background-color: black;
 }
 .container{

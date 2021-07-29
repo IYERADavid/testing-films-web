@@ -10,7 +10,6 @@ from flask_mail import Message
 from src.settings import get_env
 
 
-
 # This is signin_required decorator for verifying
 #  if a user has logged in
 def signin_required(func):
@@ -75,12 +74,6 @@ def Super_admin_role_required(func):
 
     return secure_function
 
-
-@app.before_first_request
-def create_admin():
-    UserDatabaseClient.create_db_and_admin()
-
-
 # This route it is home for all users available for every one
 # espicially those who visit us for the first time or those
 # who have not logged in. 
@@ -115,7 +108,7 @@ def user_profile():
         profile_name = secure_filename(profile.filename)
         UserDatabaseClient.update_profile(
             user_id=user_id,profile_name=profile_name,profile=profile)
-        flash('Profile picture updated successfully',"update_success")
+        flash('Profile picture updated successfully, but do hard refresh',"update_success")
         return redirect(url_for('user_profile'))
 
     return render_template('user_profile.html', form=form,user=user)
@@ -127,8 +120,6 @@ def remove_profile():
     UserDatabaseClient.remove_profile(user_id=user_id)
     flash('Profile picture deleted successfully',"delete_success")
     return redirect(url_for('user_profile'))
-
-
 
 @app.route('/home/watch-movies-Genre-<name>', methods=['GET', 'POST'])
 @signin_required
