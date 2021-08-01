@@ -23,7 +23,7 @@ class User(db.Model):
     active = db.Column(db.Boolean, default=True, nullable=False)
     roles = db.relationship('Role', secondary=roles_users,
         backref=db.backref('users', lazy='dynamic'))
-    creation_time = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
+    creation_time = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
 
 
 class Video(db.Model):
@@ -36,4 +36,4 @@ class Video(db.Model):
     video_year = db.Column(db.Integer, nullable=False)
     video_genre = db.Column(db.String(30), nullable=False)
     video_language = db.Column(db.String(30), nullable=False)
-    video_time_saved = db.Column(db.DateTime, default=datetime.datetime.now(), nullable=False)
+    video_time_saved = db.Column(db.DateTime, default=datetime.datetime.now, nullable=False)
